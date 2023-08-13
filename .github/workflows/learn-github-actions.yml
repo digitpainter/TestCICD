@@ -2,57 +2,57 @@ name: learn-github-actions
 run-name: ${{ github.actor }} is learning GitHub Actions
 on: [push]
 jobs:
-  check-bats-version:
+#   check-bats-version:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+      
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: '14'
+#       - run: npm install -g bats
+#       - run: bats -v
+#       - run: echo github.repository -- ${{ github.repository }}
+#       - run: echo github.token -- ${{ github.token }}
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#         - name: Connect to PostgreSQL
+#           run: node client.js
+#           env:
+#             POSTGRES_HOST: postgres
+#             POSTGRES_PORT: 5432
+#   example-job:
+#     runs-on: ubuntu-latest
+#     steps:
+#         - name: Run build script
+#           run: ./.github/scripts/build.sh
+#           shell: bash
+          
+  dump_contexts_to_log:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
-      - run: echo github.repository -- ${{ github.repository }}
-      - run: echo github.token -- ${{ github.token }}
-      - uses: actions/checkout@v3.5.3
-        with:
-            # Repository name with owner. For example, actions/checkout
-            repository: # optional, default is ${{ github.repository }}
-            # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, uses the default branch.
-        
-            ref: # optional
-            # Personal access token (PAT) used to fetch the repository. The PAT is configured with the local git config, which enables your scripts to run authenticated git commands. The post-job step removes the PAT.
-        
-            token: # optional, default is ${{ github.token }}
-            # SSH key used to fetch the repository. The SSH key is configured with the local git config, which enables your scripts to run authenticated git commands. The post-job step removes the SSH key.
-        
-            ssh-key: # optional
-            # Known hosts in addition to the user and global host key database. The public SSH keys for a host may be obtained using the utility `ssh-keyscan`. For example, `ssh-keyscan github.com`. The public key for github.com is always implicitly added.
-        
-            ssh-known-hosts: # optional
-            # Whether to perform strict host key checking. When true, adds the options `StrictHostKeyChecking=yes` and `CheckHostIP=no` to the SSH command line. Use the input `ssh-known-hosts` to configure additional hosts.
-        
-            ssh-strict: # optional, default is true
-            # Whether to configure the token or SSH key with the local git config
-            persist-credentials: # optional, default is true
-            # Relative path under $GITHUB_WORKSPACE to place the repository
-            path: # optional
-            # Whether to execute `git clean -ffdx && git reset --hard HEAD` before fetching
-            clean: # optional, default is true
-            # Do a sparse checkout on given patterns. Each pattern should be separated with new lines
-        
-            sparse-checkout: # optional
-            # Specifies whether to use cone-mode when doing a sparse checkout.
-        
-            sparse-checkout-cone-mode: # optional, default is true
-            # Number of commits to fetch. 0 indicates all history for all branches and tags.
-            fetch-depth: # optional, default is 1
-            # Whether to download Git-LFS files
-            lfs: # optional
-            # Whether to checkout submodules: `true` to checkout submodules or `recursive` to recursively checkout submodules.
-
-            submodules: # optional
-            # Add repository path as safe.directory for Git global config by running `git config --global --add safe.directory <path>`
-            set-safe-directory: # optional, default is true
-            # The base URL for the GitHub instance that you are trying to clone from, will use environment defaults to fetch from the same instance that the workflow is running from unless specified. Example URLs are https://github.com or https://my-ghes-server.example.com
-            github-server-url: # optional
+        - name: Dump GitHub context
+          env:
+            GITHUB_CONTEXT: ${{ toJson(github) }}
+          run: echo "$GITHUB_CONTEXT"
+        - name: Dump job context
+          env:
+             JOB_CONTEXT: ${{ toJson(job) }}
+          run: echo "$JOB_CONTEXT"
+        - name: Dump steps context
+          env:
+            STEPS_CONTEXT: ${{ toJson(steps) }}
+          run: echo "$STEPS_CONTEXT"
+        - name: Dump runner context
+          env:
+            RUNNER_CONTEXT: ${{ toJson(runner) }}
+          run: echo "$RUNNER_CONTEXT"
+        - name: Dump strategy context
+          env:
+            STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+          run: echo "$STRATEGY_CONTEXT"
+        - name: Dump matrix context
+          env:
+            MATRIX_CONTEXT: ${{ toJson(matrix) }}
+          run: echo "$MATRIX_CONTEXT"
